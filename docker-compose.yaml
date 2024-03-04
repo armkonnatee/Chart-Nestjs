@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+    backend:
+      build: ./
+      container_name: nestjs_api
+      environment:
+        - DATABASE_TYPE=mysql
+        - DATABASE_HOST=localhost
+        - DATABASE_NAME=data_chart
+        - DATABASE_PORT=3306
+        - DATABASE_USERNAME=root
+        - DATABASE_PASSWORD=123456789
+      ports:
+        - '3000:3000'
+      depends_on:
+        - database
+      networks:
+        - nestjs_network
+  
+    database:
+      image: mysql
+      ports:
+        - "3306:3306"
+      volumes:
+        - ./init-db:/docker-entrypoint-initdb.d
+        - ./db-data:/var/lib/mysql
+      networks:
+        - nest_network
+
+networks:
+  nestjs_network:
+    driver: bridge
